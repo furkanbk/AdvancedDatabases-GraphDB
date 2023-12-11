@@ -1,0 +1,272 @@
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///static/place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Place {id: row.id, name: row.name, url: row.url, type: row.type})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///static/organisation_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Organisation {id: row.id, name: row.name, url: row.url, type: row.type})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///static/tagclass_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:TagClass {id: row.id, name: row.name, url: row.url})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///static/tag_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Tag {id: row.id, name: row.name, url: row.url})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///dynamic/comment_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Message:Comment {id: row.id, creationDate: toInteger(row.creationDate), locationIP: row.locationIP, browserUsed: row.browserUsed, content: row.content, length: toInteger(row.length)})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///dynamic/forum_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Forum {id: row.id, title: row.title, creationDate: toInteger(row.creationDate)})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///dynamic/person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Person {id: row.id, firstName: row.firstName, lastName: row.lastName, gender: row.gender, birthday: toInteger(row.birthday), creationDate: toInteger(row.creationDate), locationIP: row.locationIP, browserUsed: row.browserUsed, language: row.language, email: row.email})
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV WITH HEADERS FROM 'file:///dynamic/post_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	CREATE (n:Message:Post {id: row.id, imageFile: row.imageFile, creationDate: toInteger(row.creationDate), locationIP: row.locationIP, browserUsed: row.browserUsed, language: row.language, content: row.content, length: toInteger(row.length)})
+} IN TRANSACTIONS OF 500 ROWS;
+
+create index p_idx FOR (n:Place) ON (n.id);
+create index o_idx FOR (n:Organisation) ON (n.id);
+create index tc_idx FOR (n:TagClass) ON (n.id);
+create index t_idx FOR (n:Tag) ON (n.id);
+create index com_idx FOR (n:Comment) ON (n.id);
+create index post_idx FOR (n:Post) ON (n.id);
+create index m_idx FOR (n:Message) ON (n.id);
+create index f_idx FOR (n:Forum) ON (n.id);
+create index pe_idx FOR (n:Person) ON (n.id);
+
+:auto
+LOAD CSV FROM 'file:///static/place_isPartOf_place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Place {id: row[0]})
+	MATCH (p2:Place {id: row[1]})
+	CREATE (p1)-[rel:IS_PART_OF {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///static/tagclass_isSubclassOf_tagclass_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:TagClass {id: row[0]})
+	MATCH (p2:TagClass {id: row[1]})
+	CREATE (p1)-[rel:IS_SUBCLASS_OF {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///static/organisation_isLocatedIn_place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Organisation {id: row[0]})
+	MATCH (p2:Place {id: row[1]})
+	CREATE (p1)-[rel:IS_LOCATED_IN {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///static/tag_hasType_tagclass_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Tag {id: row[0]})
+	MATCH (p2:TagClass {id: row[1]})
+	CREATE (p1)-[rel:HAS_TYPE {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/comment_hasCreator_person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Comment {id: row[0]})
+	MATCH (p2:Person {id: row[1]})
+	CREATE (p1)-[rel:HAS_CREATOR {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/comment_isLocatedIn_place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Comment {id: row[0]})
+	MATCH (p2:Place {id: row[1]})
+	CREATE (p1)-[rel:IS_LOCATED_IN {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/comment_replyOf_comment_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Comment {id: row[0]})
+	MATCH (p2:Comment {id: row[1]})
+	CREATE (p1)-[rel:REPLY_OF {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/comment_replyOf_post_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Comment {id: row[0]})
+	MATCH (p2:Post {id: row[1]})
+	CREATE (p1)-[rel:REPLY_OF {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/forum_containerOf_post_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Forum {id: row[0]})
+	MATCH (p2:Post {id: row[1]})
+	CREATE (p1)-[rel:CONTAINER_OF {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/forum_hasMember_person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Forum {id: row[0]})
+	MATCH (p2:Person {id: row[1]})
+	CREATE (p1)-[rel:HAS_MEMBER {joinDate: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+ 
+:auto
+LOAD CSV FROM 'file:///dynamic/forum_hasModerator_person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Forum {id: row[0]})
+	MATCH (p2:Person {id: row[1]})
+	CREATE (p1)-[rel:HAS_MODERATOR {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/forum_hasTag_tag_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Forum {id: row[0]})
+	MATCH (p2:Tag {id: row[1]})
+	CREATE (p1)-[rel:HAS_TAG {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_hasInterest_tag_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Tag {id: row[1]})
+	CREATE (p1)-[rel:HAS_INTEREST {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_isLocatedIn_place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Place {id: row[1]})
+	CREATE (p1)-[rel:IS_LOCATED_IN {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_knows_person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Person {id: row[1]})
+	CREATE (p1)-[rel:KNOWS {creationDate: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_likes_comment_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Comment {id: row[1]})
+	CREATE (p1)-[rel:LIKES {creationDate: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_likes_post_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Post {id: row[1]})
+	CREATE (p1)-[rel:LIKES {creationDate: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/post_hasCreator_person_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Post {id: row[0]})
+	MATCH (p2:Person {id: row[1]})
+	CREATE (p1)-[rel:HAS_CREATOR {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/comment_hasTag_tag_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Comment {id: row[0]})
+	MATCH (p2:Tag {id: row[1]})
+	CREATE (p1)-[rel:HAS_TAG {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/post_hasTag_tag_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Post {id: row[0]})
+	MATCH (p2:Tag {id: row[1]})
+	CREATE (p1)-[rel:HAS_TAG {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/post_isLocatedIn_place_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Post {id: row[0]})
+	MATCH (p2:Place {id: row[1]})
+	CREATE (p1)-[rel:IS_LOCATED_IN {}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_studyAt_organisation_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Organisation {id: row[1]})
+	CREATE (p1)-[rel:STUDY_AT {classYear: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
+
+:auto
+LOAD CSV FROM 'file:///dynamic/person_workAt_organisation_0_0.csv' AS row FIELDTERMINATOR '|'
+CALL {
+	WITH row
+	MATCH (p1:Person {id: row[0]})
+	MATCH (p2:Organisation {id: row[1]})
+	CREATE (p1)-[rel:WORK_AT {workFrom: toInteger(row[2])}]->(p2)
+} IN TRANSACTIONS OF 500 ROWS;
