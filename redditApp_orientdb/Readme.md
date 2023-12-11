@@ -1,4 +1,4 @@
---------------Welcome to Reddit App--------------
+################################ Welcome to Reddit App ######################################
 
 The default database for the queries is named "reddit_db_100k" in main.py
 If you have a different name for your database (probably a different scale factor)
