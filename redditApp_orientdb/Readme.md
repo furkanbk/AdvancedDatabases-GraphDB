@@ -1,8 +1,6 @@
-################################ Welcome to Reddit App ######################################
-
 # OrientDB RedditApp Setup Guide
 
-![OrientDB Logo](images/orientdb_logo.png)
+![OrientDB_Org](https://github.com/Reitnos/AdvancedDatabases-GraphDB/assets/68030078/0ca50065-d5c8-4477-b513-299476f8462a)
 
 ## Introduction
 
