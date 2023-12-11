@@ -96,7 +96,6 @@ scale_factor= args.scale_factor
 
 # Read the CSV file
 df_title = pd.read_csv(os.path.join(file_path, 'title.csv'))
-df_body= pd.read_csv(os.path.join(file_path, 'body.csv'))
 
 # creating different scale factors
 df_title= truncate(df_title, int(scale_factor))
