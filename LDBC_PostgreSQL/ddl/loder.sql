@@ -1,0 +1,1 @@
+copy forum FROM '/mnt/d/BDMA/ULB_COURSES/ADVANCED_DATABASES/project/ldbc_snb_interactive_v1_impls/postgres/data/dynamic/forum_0_0.csv' WITH DELIMITER '|' CSV HEADER;
