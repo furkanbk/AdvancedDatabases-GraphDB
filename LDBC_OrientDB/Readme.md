@@ -61,4 +61,4 @@ Before running the benchmark script, make sure to update the file locations. Spe
 
 10. After updating these paths, run the benchmark script for your desired scale factor and number of runs. This will generate benchmark results for the LDBC database, including CSV and text files with the logged timings.
 
-**Important:** Ensure that you have the correct versions of JDBC drivers installed. Also, make sure that all plugins, lib, and scripts are in the right place, as mentioned above, to accurately reproduce the benchmark.
+**Important:** Ensure that you have the correct versions of JDBC drivers installed. Also, make sure that all plugins, lib, and scripts are in the right place, as mentioned above, to accurately reproduce the benchmark. 
