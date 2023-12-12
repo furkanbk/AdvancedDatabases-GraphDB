@@ -1,4 +1,4 @@
-# Setting Up OrientDB for LDBC SNB Interactive V1 Benchmark Results
+# Setting Up OrientDB for LDBC SNB Interactive V1 Benchmark 
 
 1. **Download OrientDB Source File:**
    - Download the OrientDB source file from the official website using the following link: [OrientDB Community 3.2.25](https://repo1.maven.org/maven2/com/orientechnologies/orientdb-community/3.2.25/orientdb-community-3.2.25.zip)
