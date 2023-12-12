@@ -1,4 +1,4 @@
-# Setting Up LDBC SNB Interactive V1 Benchmark
+# Setting Up PostgreSQL for LDBC SNB Interactive V1 Benchmark
 
 1. **Clone the LDBC SNB Interactive V1 Implementation:**
    - Clone the LDBC SNB Interactive V1 implementation from the GitHub repository: [LDBC SNB Interactive V1 Implementations](https://github.com/ldbc/ldbc_snb_interactive_v1_impls/tree/main)
