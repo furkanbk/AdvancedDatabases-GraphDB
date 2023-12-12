@@ -16,6 +16,7 @@
 5. **Copy Substitution Parameters and Queries:**
    - Copy the substitution parameters folder into the repository.
    - Copy the substitution parameter for a scale factor to its data folder so that it can be used in the benchmark for replacing the placeholders in the queries.
+   - Also copy the Queries folder into the PostgreSQL folder of the cloned repository and replace the folder if it already exists.
 
 # PostgreSQL Benchmark Setup for LDBC SNB Interactive V1 Benchmark
 **Note:**
